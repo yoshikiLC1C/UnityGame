@@ -21,6 +21,8 @@ public class EnemyBullet : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
+            Player player = other.gameObject.GetComponent<Player>();
+            player.Damage();
         }
     }
 }

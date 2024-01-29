@@ -26,5 +26,11 @@ public class PlayerBullet : MonoBehaviour
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
             enemy.Damage();
         }
+
+        if(other.gameObject.tag == "Ground")
+        {
+            Destroy(gameObject);
+        }
+        
     }
 }

@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
-    // アイテムの数
-    public const int Total = 10;
+    // 敵の数
+    public int Total = 0;
 
     // 残数
     private int _restCount;
+
 
     // 残数テキスト
     [SerializeField]
@@ -24,20 +25,36 @@ public class Game : MonoBehaviour
     [SerializeField]
     private GameObject _EnemyPrefab;
 
+    private GameObject[] enemyObjects;
+    private int enemyNum;
+
     // クリアの画像
     [SerializeField]
     private Image _clearImage;
+
+    [SerializeField]
+    private Text _text;
 
     //「もう一度」ボタン
     [SerializeField]
     private Button _restartButton;
 
+    //「タイトル」ボタン
+    [SerializeField]
+    private Button _titleButton;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
+        Total = enemyObjects.Length;
+
         SetRestCount(Total);
-        //CreateItems();
-        _player.OnGetItemCallback = OnGetItem;
+        //CreateEnemys();
+        //_enemy. = OnEnemyCount;
+
+        
 
         //マウスカーソルを非表示にし、位置を固定
         Cursor.visible = false;
@@ -47,7 +64,11 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //OnEnemyCount();
+        if(_player.currentHp <= 0)
+        {
+            Finish();
+        }
     }
 
     // 敵の生成
@@ -90,10 +111,10 @@ public class Game : MonoBehaviour
     }
 
     // アイテム取得時の処理
-    private void OnGetItem()
+    public void OnEnemyCount()
     {
         SetRestCount(_restCount - 1);
-        if(_restCount == 0)
+        if (_restCount == 0)
         {
             Finish();
         }
@@ -102,14 +123,32 @@ public class Game : MonoBehaviour
     // 終了処理
     private void Finish()
     {
-        _player.Finish();
-        _clearImage.gameObject.SetActive(true);
-        _restartButton.gameObject.SetActive(true);
+        if (_player.currentHp > 0)
+        {
+            _player.Finish();
+            _clearImage.gameObject.SetActive(true);
+            _restartButton.gameObject.SetActive(true);
+            _titleButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            _player.Finish();
+            _text.gameObject.SetActive(true);
+            _restartButton.gameObject.SetActive(true);
+            _titleButton.gameObject.SetActive(true);
+        }
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     // もう一度遊ぶ処理
     public void Restart()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+    // タイトルに戻る処理
+    public void Title()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

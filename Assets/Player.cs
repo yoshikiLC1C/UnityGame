@@ -3,9 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Player : MonoBehaviour
 {
+
+    // 最大HPと現在のHP
+    private int maxHp = 100;
+    public int currentHp;
+
+    [SerializeField]
+    private Slider slider;
+    [SerializeField]
+    private PlayerHP playerHp;
+
     private float Speed = 5f;
 
     private const float RotateSpeed = 720f;
@@ -41,12 +53,17 @@ public class Player : MonoBehaviour
     RaycastHit hit;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
         _unityChanAnimator = _unityChan.GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        // Sliderを満タンにする
+        slider.value = 1;
+        // 現在のHPを最大HPと同じにする
+        currentHp = maxHp;
+        Debug.Log("Start currentHp : " + currentHp);
     }
 
 
@@ -171,9 +188,24 @@ public class Player : MonoBehaviour
     {
         _isFinished = true;
         _unityChan.rotation = Quaternion.Euler(0f, 180f, 0f);
-        _unityChanAnimator.SetBool("finish", true);
+        if (currentHp > 0)
+        {
+            _unityChanAnimator.SetBool("finish", true);
+        }
+    }
+    public void Damage()
+    {
+        playerHp.StartShake(1.0f,10.0f,1.0f);
+        int damage = 10;
+        Debug.Log("damage : " + damage);
+
+        //現在のHPからダメージを引く
+        currentHp = currentHp - damage;
+        Debug.Log("After currentHp : " + currentHp);
+
+        //最大HPにおける現在のHPをSliderに反映
+        slider.value = (float)currentHp / (float)maxHp;
+        Debug.Log("slider.value : " + slider.value);
     }
 
-
-    
 }
