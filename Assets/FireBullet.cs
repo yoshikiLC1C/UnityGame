@@ -38,7 +38,7 @@ public class FireBullet : MonoBehaviour
         if (isSpawning)
             return;
 
-        StartCoroutine(nameof(SpawnMissile));
+        //StartCoroutine(nameof(SpawnMissile));
 
         ShotHomingBullet();
     }
